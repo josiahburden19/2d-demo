@@ -1,10 +1,6 @@
 local camera = require "orthographic.camera"
-local move_up = hash("move_up")
-local move_down = hash("move_down")
-local move_left = hash("move_left")
-local move_right = hash("move_right")
 
- animation_idle = hash("idle")
+animation_idle = hash("idle")
 
 function init(self)
 	msg.post(".", "acquire_input_focus")
@@ -13,26 +9,23 @@ function init(self)
 	msg.post('.', 'start_camera')
 	self.rotated_vector = vmath.vector3(0,0,0)
 	self.animation = nil
-	
+	for _,v in ipairs({"move_up", "move_down", "move_left", "move_right", "up_idle", "down_idle", "left_idle", "right_idle"}) do
+		self[v] = hash(v)
+	end
+	self.walking = false
 end
 function update(self, dt)
 	self.dt = dt
-	
-
-	local animation = animation_idle
-	if self.rotated_vector.y > 0  then
-		animation = move_up
-	elseif self.rotated_vector.y <0  then
-		animation = move_down
-	end
-	if animation ~= self.current_animation then
-		msg.post("#sprite", "play_animation", { id = animation })
-		self.current_animation = animation
-		
-	end
-	
-		
-
+	-- local animation = animation_idle
+	-- if self.rotated_vector.y > 0  then
+	-- 	animation = move_up
+	-- elseif self.rotated_vector.y <0  then
+	-- 	animation = move_down
+	-- end
+	-- if animation ~= self.current_animation then
+	-- 	sprite.play_flipbook('#sprite', animation)
+	-- 	self.current_animation = animation
+	-- end
 end
 
 function on_message(self, message_id, message, sender)
@@ -41,25 +34,88 @@ function on_message(self, message_id, message, sender)
 	end
 end
 
+function play_animation(self, direction, mode)
+	local angle = math.deg(math.atan2(direction.y, direction.x))
+	if angle >= 45 and angle < 135 then
+		if mode == true then
+			sprite.play_flipbook('#sprite', self.move_up)
+		else
+			sprite.play_flipbook('#sprite', self.up_idle)
+		end
+	elseif (angle >= 135 and angle <= 180) or (angle >= -180 and angle <-135) then
+		if mode == true then
+			sprite.play_flipbook('#sprite', self.move_left)
+		else
+			sprite.play_flipbook('#sprite', self.left_idle)
+		end
+	elseif angle >= -135 and angle < -45 then
+		if mode == true then
+			sprite.play_flipbook('#sprite', self.move_down)
+		else
+			sprite.play_flipbook('#sprite', self.down_idle)
+		end
+	elseif angle >= -45 and angle < 45 then
+		if mode == true then
+			sprite.play_flipbook('#sprite', self.move_right)
+		else
+			sprite.play_flipbook('#sprite', self.right_idle)
+		end
+	end
+		
+end
+
 function on_input(self, action_id, action)
 	if action_id == hash("Up") then
-		self.rotated_vector =  vmath.rotate(go.get_rotation(),vmath.vector3(0,10,0)*self.SPEED)
-		print(self.rotated_vector)
-		self.direction = go.get_position()+ self.rotated_vector* self.dt
-
-		go.set_position(self.direction) 
+		local rotated_vector =  vmath.rotate(go.get_rotation(),vmath.vector3(0,10,0)*self.SPEED)
+		local new_pos = go.get_position() + rotated_vector * self.dt
+		
+		go.set_position(new_pos)
+		
+		if action.pressed then
+			self.walking = true
+			play_animation(self, rotated_vector, true)
+		elseif action.released then
+			self.walking = false
+			play_animation(self, rotated_vector, false)
+		end
 	elseif action_id == hash("Left") then
-		self.direction = go.get_rotation()*vmath.quat_rotation_z(10*self.dt)
-		go.set_rotation(self.direction)
+		local rotated_vector =  vmath.rotate(go.get_rotation(),vmath.vector3(-10,0,0)*self.SPEED)
+		local new_pos = go.get_position() + rotated_vector * self.dt
+
+		go.set_position(new_pos)
+
+		if action.pressed then
+			self.walking = true
+			play_animation(self, rotated_vector, true)
+		elseif action.released then
+			self.walking = false
+			play_animation(self, rotated_vector, false)
+		end
 	elseif action_id == hash("Right") then
-		self.direction = go.get_rotation()*vmath.quat_rotation_z(-10*self.dt)
-		go.set_rotation(self.direction)
+		local rotated_vector =  vmath.rotate(go.get_rotation(),vmath.vector3(-10,0,0)*self.SPEED)
+		local new_pos = go.get_position() + rotated_vector * self.dt
+
+		go.set_position(new_pos)
+
+		if action.pressed then
+			self.walking = true
+			play_animation(self, rotated_vector, true)
+		elseif action.released then
+			self.walking = false
+			play_animation(self, rotated_vector, false)
+		end
 	elseif action_id == hash("Down") then
-		   
+		local rotated_vector =  vmath.rotate(go.get_rotation(),vmath.vector3(0,-10,0)*self.SPEED)
+		local new_pos = go.get_position() + rotated_vector * self.dt
 		
+		go.set_position(new_pos)
 		
-		self.rotated_vector =  vmath.rotate(go.get_rotation(),vmath.vector3(0,-10,0)*self.SPEED)
-		print(self.rotated_vector)
-		go.set_position(go.get_position()+ self.rotated_vector* self.dt )
+		if action.pressed then
+			self.walking = true
+			play_animation(self, rotated_vector, true)
+		elseif action.released then
+			self.walking = false
+			play_animation(self, rotated_vector, false)
+		end
 	end
 end
