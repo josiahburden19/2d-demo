@@ -1,6 +1,9 @@
+local camera = require "orthographic.camera"
+
 function init(self)
 	msg.post(".", "acquire_input_focus")
 	self.SPEED =40
+	camera.follow(go.get_id('camera'), go.get_id(), {})
 end
 function update(self, dt)
 	self.dt = dt
@@ -12,6 +15,6 @@ function on_input(self, action_id, action)
 	elseif action_id == hash("Left") then
 		go.set_rotation(go.get_rotation()*vmath.quat_rotation_z(0.1))
 	elseif action_id == hash("Right") then
-			go.set_rotation(go.get_rotation()*vmath.quat_rotation_z(-0.1))
+		go.set_rotation(go.get_rotation()*vmath.quat_rotation_z(-0.1))
 	end
 end
