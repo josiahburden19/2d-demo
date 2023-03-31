@@ -92,7 +92,7 @@ function on_input(self, action_id, action)
 			play_animation(self, rotated_vector, false)
 		end
 	elseif action_id == hash("Right") then
-		local rotated_vector =  vmath.rotate(go.get_rotation(),vmath.vector3(-10,0,0)*self.SPEED)
+		local rotated_vector =  vmath.rotate(go.get_rotation(),vmath.vector3(10,0,0)*self.SPEED)
 		local new_pos = go.get_position() + rotated_vector * self.dt
 
 		go.set_position(new_pos)
