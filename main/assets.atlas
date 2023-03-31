@@ -1,5 +1,25 @@
 images {
-  image: "/images/grass.png"
+  image: "/images/Flowers/flowers-assets/blue_flower.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/images/Flowers/flowers-assets/grass.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/images/Flowers/flowers-assets/purple_flower.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/images/Flowers/flowers-assets/violet_flower.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/images/Flowers/flowers-assets/yellow_flower.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/images/Flowers/flowers-assets/yellow_flowers.png"
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
 animations {
