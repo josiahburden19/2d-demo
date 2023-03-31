@@ -1,10 +1,20 @@
+local camera = require "orthographic.camera"
+
 function init(self)
 	msg.post(".", "acquire_input_focus")
 	self.SPEED =40
+	msg.post('.', 'start_camera')
 end
 function update(self, dt)
 	self.dt = dt
 end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash('start_camera') then
+		camera.follow(go.get_id('camera'), go.get_id(), {})
+	end
+end
+
 function on_input(self, action_id, action)
 	if action_id == hash("Up") then
 		local rotated_vector =  vmath.rotate(go.get_rotation(),vmath.vector3(0,10,0)*self.SPEED)
@@ -12,6 +22,9 @@ function on_input(self, action_id, action)
 	elseif action_id == hash("Left") then
 		go.set_rotation(go.get_rotation()*vmath.quat_rotation_z(0.1))
 	elseif action_id == hash("Right") then
-			go.set_rotation(go.get_rotation()*vmath.quat_rotation_z(-0.1))
+		go.set_rotation(go.get_rotation()*vmath.quat_rotation_z(-0.1))
+	elseif action_id == hash("Down") then
+		local rotated_vector =  vmath.rotate(go.get_rotation(),vmath.vector3(0,-10,0)*self.SPEED)
+		go.set_position(go.get_position()+ rotated_vector* self.dt )
 	end
 end
