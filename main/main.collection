@@ -21,7 +21,7 @@ instances {
 }
 scale_along_z: 0
 embedded_instances {
-  id: "go"
+  id: "character"
   data: "components {\n"
   "  id: \"movement\"\n"
   "  component: \"/main/movement.script\"\n"
@@ -43,7 +43,7 @@ embedded_instances {
   "  id: \"sprite\"\n"
   "  type: \"sprite\"\n"
   "  data: \"tile_set: \\\"/main/assets.atlas\\\"\\n"
-  "default_animation: \\\"move_up\\\"\\n"
+  "default_animation: \\\"idle\\\"\\n"
   "material: \\\"/builtins/materials/sprite.material\\\"\\n"
   "blend_mode: BLEND_MODE_ALPHA\\n"
   "\"\n"
@@ -63,7 +63,7 @@ embedded_instances {
   position {
     x: 0.0
     y: 0.0
-    z: 0.0
+    z: 1.0
   }
   rotation {
     x: 0.0
