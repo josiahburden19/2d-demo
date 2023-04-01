@@ -1,17 +1,12 @@
 local camera = require "orthographic.camera"
-
 animation_idle = hash("idle")
-
 function init(self)
 	msg.post(".", "acquire_input_focus")
 	go.property('camera_world_bounds', vmath.vector4())
-
 	update_camera_bounds(self)
-
 	print(self.camera_world_bounds)
 	factory.create('#factory', vmath.vector3(0, 0, 0))
 	factory.create('#factory', vmath.vector3(0, 640, 0))
-
 	pprint(self.tiles)
 	self.SPEED = 40
 	msg.post('.', 'start_camera')
@@ -20,12 +15,10 @@ function init(self)
 	end
 	self.walking = false
 end
-
 function update(self, dt)
 	self.dt = dt
 	update_camera_bounds(self)
 end
-
 function linear_search(data, value)
 	for i,v in pairs(data) do
 		if v == value then
@@ -34,27 +27,22 @@ function linear_search(data, value)
 	end
 	return -1
 end
-
 function update_camera_bounds(self)
 	self.camera_world_bounds.x = camera.screen_to_world(go.get_id('camera'), vmath.vector3(0, 0, 0)).x
 	self.camera_world_bounds.y = camera.screen_to_world(go.get_id('camera'), vmath.vector3(0, 0, 0)).y
 	self.camera_world_bounds.w = camera.screen_to_world(go.get_id('camera'), vmath.vector3(960, 0, 0)).x
 	self.camera_world_bounds.z = camera.screen_to_world(go.get_id('camera'), vmath.vector3(0, 640, 0)).y
 end
-
 function on_message(self, message_id, message, sender)
 	if message_id == hash('start_camera') then
 		camera.follow(go.get_id('camera'), go.get_id(), {})
 	end
 end
-
 function on_input(self, action_id, action)
 	if action_id == hash("Up") and (self.walking == false or self.walking == 'up') then
 		local direction_vector = vmath.vector3(0,10,0)*self.SPEED
 		local new_pos = go.get_position() + direction_vector * self.dt
-
 		go.set_position(new_pos)
-
 		if self.walking == false then
 			self.walking = 'up'
 			sprite.play_flipbook('#sprite', self.move_up)
@@ -65,9 +53,7 @@ function on_input(self, action_id, action)
 	elseif action_id == hash("Left") and (self.walking == false or self.walking == 'left') then
 		local direction_vector =  vmath.vector3(-10,0,0)*self.SPEED
 		local new_pos = go.get_position() + direction_vector * self.dt
-
 		go.set_position(new_pos)
-
 		if self.walking == false then
 			self.walking = 'left'
 			sprite.play_flipbook('#sprite', self.move_left)
@@ -78,9 +64,7 @@ function on_input(self, action_id, action)
 	elseif action_id == hash("Right") and (self.walking == false or self.walking == 'right') then
 		local direction_vector =  vmath.vector3(10,0,0)*self.SPEED
 		local new_pos = go.get_position() + direction_vector * self.dt
-
 		go.set_position(new_pos)
-
 		if self.walking == false then
 			self.walking = 'right'
 			sprite.play_flipbook('#sprite', self.move_right)
@@ -91,9 +75,7 @@ function on_input(self, action_id, action)
 	elseif action_id == hash("Down") and (self.walking == false or self.walking == 'down') then
 		local direction_vector =  vmath.vector3(0,-10,0)*self.SPEED
 		local new_pos = go.get_position() + direction_vector * self.dt
-
 		go.set_position(new_pos)
-
 		if self.walking == false then
 			self.walking = 'down'
 			sprite.play_flipbook('#sprite', self.move_down)
